@@ -18,12 +18,11 @@ from django.contrib import admin
 from django.urls import path,include
 from inventario.views import gestionar
 from proveedores.views import registrar
-from ventas.views import vender
+from compras.views import comprar
 urlpatterns = [
-    path('admin/', admin.site.urls),
     path('admin/', admin.site.urls),
     path('inventario/', gestionar),
     path('proveedores/', registrar),
-    path('ventas/', vender),
+    path('compras/', comprar),
     path('api/', include('api.urls')),
 ]
