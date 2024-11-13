@@ -13,6 +13,22 @@ class ProductoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Producto
         fields = '__all__'
+        
+class UserSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True)
+
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'password', 'email')
+
+    def create(self, validated_data):
+        user = User(
+            email=validated_data['email'],
+            username=validated_data['username']
+        )
+        user.set_password(validated_data['password'])  # Encriptación de la contraseña
+        user.save()
+        return user    
 
 class   CompraSerializer(serializers.ModelSerializer):
     producto = serializers.PrimaryKeyRelatedField(queryset=Producto.objects.all())

@@ -3,8 +3,8 @@ from rest_framework import viewsets, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
-from .models import Producto, Venta, Proveedor
-from .serializers import ProductoSerializer, VentaSerializer, ProveedorSerializer, UserSerializer
+from .models import Producto, Compra, Proveedor
+from .serializers import ProductoSerializer, CompraSerializer, ProveedorSerializer, UserSerializer
 # Create your views here.
 
 class ProveedorViewSet(viewsets.ModelViewSet):
@@ -22,7 +22,7 @@ class CompraViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
 
         serializer.save()
-        
+
 class RegisterView(APIView):
     def post(self, request):
         serializer = UserSerializer(data=request.data)
