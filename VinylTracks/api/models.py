@@ -20,6 +20,7 @@ class Producto(models.Model):
 
 class Compra(models.Model):
     producto = models.ForeignKey(Producto, on_delete=models.CASCADE, related_name="compras")
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE, related_name="ventas")  
     cantidad_vendida = models.IntegerField()
     fecha_compra = models.DateTimeField(auto_now_add=True)
 
