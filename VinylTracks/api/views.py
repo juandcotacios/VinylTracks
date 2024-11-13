@@ -43,8 +43,8 @@ class LoginView(APIView):
         return Response({'error': 'Invalid Credentials'}, status=status.HTTP_400_BAD_REQUEST)
 
 class VentaViewSet(viewsets.ModelViewSet):
-    queryset = Venta.objects.all()
-    serializer_class = VentaSerializer
+    queryset = Compra.objects.all()
+    serializer_class = CompraSerializer
 
     def perform_create(self, serializer):
         serializer.save(usuario=self.request.user)   
