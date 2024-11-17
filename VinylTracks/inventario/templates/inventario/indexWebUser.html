@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discover Music</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f9f9f9;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #fff;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #d80027;
+        }
+
+        nav ul {
+            display: flex;
+            gap: 20px;
+            list-style: none;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .icons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .filter-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background-color: #fff;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .filters select, .sort select {
+            padding: 5px;
+            font-size: 16px;
+        }
+
+        .product-list {
+            display: flex;
+            gap: 20px;
+            padding: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .product-card {
+            width: 200px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            text-align: center;
+            position: relative;
+        }
+
+        .labels {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            display: flex;
+            gap: 5px;
+        }
+
+        .preventa, .exclusivo {
+            background-color: #d80027;
+            color: #fff;
+            font-size: 12px;
+            padding: 3px 5px;
+            border-radius: 3px;
+        }
+
+        img {
+            width: 100%;
+            height: auto;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .product-card h3 {
+            font-size: 16px;
+            color: #333;
+        }
+
+        .product-card p {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .price {
+            font-weight: bold;
+            color: #d80027;
+            margin: 10px 0;
+        }
+
+        .add-to-cart {
+            background-color: #d80027;
+            color: #fff;
+            border: none;
+            padding: 10px;
+            width: 100%;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .add-to-cart:hover {
+            background-color: #b0001f;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">discovermusic.co</div>
+        <nav>
+            <ul>
+                <li><a href="#">Promoción</a></li>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Merch</a></li>
+                <li><a href="#">Artistas</a></li>
+                <li><a href="#">Formatos</a></li>
+                <li><a href="#">Exclusivos</a></li>
+                <li><a href="#">Novedades</a></li>
+                <li><a href="#">Preventas</a></li>
+            </ul>
+        </nav>
+        <div class="icons">
+            <span class="icon-search">🔍</span>
+            <span class="icon-user">👤</span>
+            <span class="icon-cart">🛒</span>
+        </div>
+    </header>
+    <main>
+        <div class="filter-section">
+            <div class="filters">
+                <select>
+                    <option>Disponibilidad</option>
+                </select>
+                <select>
+                    <option>Precio</option>
+                </select>
+            </div>
+            <div class="sort">
+                <label>Ordenar por:</label>
+                <select>
+                    <option>Fecha: reciente a antiguo(a)</option>
+                </select>
+            </div>
+        </div>
+        <div class="product-list">
+            <div class="product-card">
+                <div class="labels">
+                    <span class="preventa">PREVENTA</span>
+                    <span class="exclusivo">EXCLUSIVO</span>
+                </div>
+                <img src="https://via.placeholder.com/200" alt="Inhaler Album">
+                <h3>INHALER</h3>
+                <p>Open Wide Vinilo Exclusivo Tienda + Tarjeta Firmada</p>
+                <p class="price">$130.900</p>
+                <button class="add-to-cart">Añadir al Carrito</button>
+            </div>
+            <div class="product-card">
+                <div class="labels">
+                    <span class="preventa">PREVENTA</span>
+                    <span class="exclusivo">EXCLUSIVO</span>
+                </div>
+                <img src="https://via.placeholder.com/200" alt="Olivia Rodrigo Album">
+                <h3>OLIVIA RODRIGO</h3>
+                <p>Can't Catch Me Now Grabado Exclusivo 7" - Importado</p>
+                <p class="price">$65.450</p>
+                <button class="add-to-cart">Añadir al Carrito</button>
+            </div>
+            <div class="product-card">
+                <div class="labels">
+                    <span class="preventa">PREVENTA</span>
+                    <span class="exclusivo">EXCLUSIVO</span>
+                </div>
+                <img src="https://via.placeholder.com/200" alt="Sabrina Carpenter Album">
+                <h3>SABRINA CARPENTER</h3>
+                <p>Bed Chem 7in - Importado</p>
+                <p class="price">$65.450</p>
+                <button class="add-to-cart">Añadir al Carrito</button>
+            </div>
+        </div>
+    </main>
+    <script>
+        document.querySelectorAll('.add-to-cart').forEach(button => {
+            button.addEventListener('click', () => {
+                alert('Producto añadido al carrito');
+            });
+        });
+    </script>
+</body>
+</html>
