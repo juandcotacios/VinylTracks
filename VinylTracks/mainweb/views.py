@@ -3,6 +3,6 @@ from django.shortcuts import render
 # Create your views here.
 def viewsweb(request):
     context = {
-        "nombre": "Proveedores"
+        "nombre": "mainweb"
     }
-    return render(request,"proveedores/indexProveedores.html", context)
+    return render(request,"mainweb/indexWebUser.html", context)
