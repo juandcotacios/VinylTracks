@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class ProveedoresConfig(AppConfig):
+class MainWebConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'proveedores'
+    name = 'mainweb'
