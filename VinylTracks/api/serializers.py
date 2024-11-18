@@ -35,4 +35,4 @@ class   CompraSerializer(serializers.ModelSerializer):
     usuario = serializers.ReadOnlyField(source='usuario.username') 
     class Meta:
         model = Compra
-        fields = ['id', 'producto', 'usuario','cantidad_vendida', 'fecha_venta']
+        fields = ['id', 'producto', 'usuario','cantidad_vendida', 'fecha_compra']
