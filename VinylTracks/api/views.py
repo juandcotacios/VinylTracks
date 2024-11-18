@@ -1,4 +1,5 @@
 from django.contrib.auth import authenticate
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, AllowAny
 from rest_framework import viewsets, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -10,20 +11,24 @@ from .serializers import ProductoSerializer, CompraSerializer, ProveedorSerializ
 class ProveedorViewSet(viewsets.ModelViewSet):
     queryset = Proveedor.objects.all()
     serializer_class = ProveedorSerializer
+    permission_classes = [AllowAny]
+    
+class ProductoViewSet(viewsets.ModelViewSet):    
+ queryset = Producto.objects.all()
+ serializer_class = ProductoSerializer
+ permission_classes = [AllowAny]
 
-class ProductoViewSet(viewsets.ModelViewSet):
-    queryset = Producto.objects.all()
-    serializer_class = ProductoSerializer
-
-class CompraViewSet(viewsets.ModelViewSet):
+class CompraViewSet(viewsets.ModelViewSet): 
     queryset = Compra.objects.all()
     serializer_class = CompraSerializer
-
+    permission_classes = [IsAuthenticatedOrReadOnly] 
     def perform_create(self, serializer):
 
-        serializer.save()
+        serializer.save(usuario=self.request.user)
 
 class RegisterView(APIView):
+    permission_classes = [AllowAny]
+    
     def post(self, request):
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
@@ -33,6 +38,8 @@ class RegisterView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class LoginView(APIView):
+    permission_classes = [AllowAny]
+    
     def post(self, request):
         username = request.data.get('username')
         password = request.data.get('password')
