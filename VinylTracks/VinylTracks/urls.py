@@ -17,12 +17,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path,include
 from inventario.views import gestionar
-from proveedores.views import registrar
+from mainweb.views import viewsweb
 from compras.views import comprar
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('inventario/', gestionar),
-    path('proveedores/', registrar),
+    path('mainweb/', viewsweb),
     path('compras/', comprar),
     path('api/', include('api.urls')),
 ]

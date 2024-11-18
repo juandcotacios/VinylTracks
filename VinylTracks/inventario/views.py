@@ -3,6 +3,6 @@ from django.shortcuts import render
 # Create your views here.
 def gestionar(request):
     context = {
-        "nombre": "Inventario"
+        "nombre": "mainweb"
     }
-    return render(request,"inventario/indexWebUser.html", context)
+    return render(request,"mainweb/indexWebUser.html", context)

@@ -1,7 +1,7 @@
 from django.shortcuts import render
 
 # Create your views here.
-def registrar(request):
+def viewsweb(request):
     context = {
         "nombre": "Proveedores"
     }
