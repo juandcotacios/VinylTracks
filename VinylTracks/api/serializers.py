@@ -21,6 +21,10 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'username', 'password', 'email')
+    def validate_email(self, value):
+        if User.objects.filter(email=value).exists():
+            raise serializers.ValidationError("Este correo electrónico ya está registrado.")
+        return value
 
     def create(self, validated_data):
         user = User(
@@ -31,6 +35,22 @@ class UserSerializer(serializers.ModelSerializer):
         user.save()
         return user    
 
+class UserSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True)
+
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'password', 'email')
+
+    def create(self, validated_data):
+        user = User(
+            email=validated_data['email'],
+            username=validated_data['username']
+        )
+        user.set_password(validated_data['password'])  # Encriptación de la contraseña
+        user.save()
+        return user 
+        
 class   CompraSerializer(serializers.ModelSerializer):
     producto = serializers.PrimaryKeyRelatedField(queryset=Producto.objects.all())
     usuario = serializers.ReadOnlyField(source='usuario.username') 

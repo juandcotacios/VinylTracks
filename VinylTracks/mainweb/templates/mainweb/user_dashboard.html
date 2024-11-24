@@ -31,7 +31,7 @@
                             <li>
                                 <strong>Pedido #{{ order.id }}</strong> - Fecha: {{ order.fecha_pedido }}
                                 <ul>
-                                    {% for item in order.items.all %}
+                                    {% for item in order.items %}
                                         <li>
                                             {{ item.cantidad }} x {{ item.producto.nombre }} - ${{ item.precio_unitario }}
                                         </li>
@@ -50,8 +50,8 @@
             <section>
                 <h3>Opciones</h3>
                 <ul>
-                    <li><a href="#">Historial de Pedidos</a></li>
-                    <li><a href="#">Perfil</a></li>
+                    <li><a href="{% url 'mainweb:user_dashboard' %}">Historial de Pedidos</a></li>
+                    <li><a href="{% url 'mainweb:profile' %}">Perfil</a></li>
                     <li><a href="{% url 'mainweb:logout' %}">Cerrar Sesión</a></li>
                 </ul>
             </section>

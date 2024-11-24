@@ -107,6 +107,7 @@ nav ul li a {
 .product-card h3 {
     font-size: 16px;
     color: #333;
+    margin-bottom: 5px;
 }
 
 .product-card p {
@@ -164,4 +165,19 @@ nav ul li a {
 
 .user-dashboard a:hover {
     text-decoration: underline;
+}
+.view-product {
+    display: inline-block;
+    background-color: #d80027;
+    color: #fff;
+    text-align: center;
+    text-decoration: none;
+    padding: 10px;
+    width: 100%;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+.view-product:hover {
+    background-color: #b0001f;
 }
