@@ -15,6 +15,7 @@ class Producto(models.Model):
     precio = models.DecimalField(max_digits=10, decimal_places=2)
     cantidad_en_inventario = models.IntegerField()
     proveedor = models.ForeignKey(Proveedor, on_delete=models.CASCADE, related_name="productos")
+    imagen = models.ImageField(upload_to='productos_imagenes/', null=True, blank=True)
 
     def __str__(self):
         return f"{self.nombre} - {self.artista}"
