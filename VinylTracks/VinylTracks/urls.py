@@ -19,10 +19,12 @@ from django.urls import path,include
 from inventario.views import gestionar
 from mainweb.views import viewsweb
 from compras.views import comprar
+from django.conf import settings
+from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('inventario/', gestionar),
     path('mainweb/', viewsweb),
     path('compras/', comprar),
     path('api/', include('api.urls')),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

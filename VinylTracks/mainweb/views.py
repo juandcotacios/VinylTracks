@@ -1,8 +1,11 @@
 from django.shortcuts import render
+from api.models import Producto
+from django.shortcuts import render
 
 # Create your views here.
 def viewsweb(request):
+    productos = Producto.objects.all()
     context = {
-        "nombre": "mainweb"
+        "productos": productos
     }
     return render(request,"mainweb/indexWebUser.html", context)

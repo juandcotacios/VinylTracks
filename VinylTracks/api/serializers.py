@@ -9,6 +9,7 @@ class ProveedorSerializer(serializers.ModelSerializer):
 
 class ProductoSerializer(serializers.ModelSerializer):
     proveedor = serializers.PrimaryKeyRelatedField(queryset=Proveedor.objects.all())
+    imagen_url = serializers.SerializerMethodField()
 
     class Meta:
         model = Producto
