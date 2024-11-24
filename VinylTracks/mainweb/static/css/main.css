@@ -89,11 +89,14 @@ nav ul li a {
     border-radius: 3px;
 }
 
-img {
+.product-card img {
     width: 100%;
-    height: auto;
+    height: 200px;
+    object-fit: cover; /* Asegura que las imágenes se ajusten bien dentro de las dimensiones */
     border-radius: 5px;
     margin-bottom: 10px;
+    display: block;
+    margin: 0 auto;
 }
 
 .product-card h3 {

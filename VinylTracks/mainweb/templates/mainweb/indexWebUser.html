@@ -46,39 +46,21 @@
             </div>
         </div>
         <div class="product-list">
+            {% for producto in productos %}
             <div class="product-card">
                 <div class="labels">
                     <span class="preventa">PREVENTA</span>
                     <span class="exclusivo">EXCLUSIVO</span>
                 </div>
-                <img src="https://via.placeholder.com/200" alt="Inhaler Album">
-                <h3>INHALER</h3>
-                <p>Open Wide Vinilo Exclusivo Tienda + Tarjeta Firmada</p>
-                <p class="price">$130.900</p>
+                <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}">
+                <h3>{{ producto.nombre }}</h3>
+                <p>{{ producto.artista }}</p>
+                <p class="price">${{ producto.precio }}</p>
                 <button class="add-to-cart">Añadir al Carrito</button>
             </div>
-            <div class="product-card">
-                <div class="labels">
-                    <span class="preventa">PREVENTA</span>
-                    <span class="exclusivo">EXCLUSIVO</span>
-                </div>
-                <img src="https://via.placeholder.com/200" alt="Olivia Rodrigo Album">
-                <h3>OLIVIA RODRIGO</h3>
-                <p>Can't Catch Me Now Grabado Exclusivo 7" - Importado</p>
-                <p class="price">$65.450</p>
-                <button class="add-to-cart">Añadir al Carrito</button>
-            </div>
-            <div class="product-card">
-                <div class="labels">
-                    <span class="preventa">PREVENTA</span>
-                    <span class="exclusivo">EXCLUSIVO</span>
-                </div>
-                <img src="https://via.placeholder.com/200" alt="Sabrina Carpenter Album">
-                <h3>SABRINA CARPENTER</h3>
-                <p>Bed Chem 7in - Importado</p>
-                <p class="price">$65.450</p>
-                <button class="add-to-cart">Añadir al Carrito</button>
-            </div>
+            {% empty %}
+            <p>No hay productos disponibles en este momento.</p>
+            {% endfor %}
         </div>
     </main>
     <script src="{% static 'js/main.js' %}"></script>
