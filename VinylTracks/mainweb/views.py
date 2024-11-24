@@ -9,3 +9,6 @@ def viewsweb(request):
         "productos": productos
     }
     return render(request,"mainweb/indexWebUser.html", context)
+
+def login_view(request):
+    return render(request, "mainweb/login.html")
