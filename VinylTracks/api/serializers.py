@@ -37,7 +37,11 @@ class   CompraSerializer(serializers.ModelSerializer):
     class Meta:
         model = Compra
         fields = ['id', 'producto', 'usuario','cantidad_vendida', 'fecha_compra']
+
+
 class OrderItemSerializer(serializers.ModelSerializer):
+    producto = ProductoSerializer(read_only=True)  
+
     class Meta:
         model = OrderItem
         fields = "__all__"
@@ -45,7 +49,7 @@ class OrderItemSerializer(serializers.ModelSerializer):
 
 class OrderSerializer(serializers.ModelSerializer):
     items = OrderItemSerializer(many=True, read_only=True)
-    usuario = serializers.ReadOnlyField(source="usuario.username")
+    usuario = serializers.ReadOnlyField(source="usuario.username")  
 
     class Meta:
         model = Order
