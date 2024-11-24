@@ -24,7 +24,9 @@
         </nav>
         <div class="icons">
             <span onclick="loginFunc()" class="icon-search">🔍</span>
-            <span onclick="RegisterFunc()" class="icon-user">👤</span>
+            
+            <a href="{% url 'mainweb:login' %}" class="icon-user">👤</a>
+
             <span class="icon-cart">🛒</span>
         </div>
     </header>

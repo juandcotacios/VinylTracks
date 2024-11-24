@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from .models import Producto, Compra, Proveedor
+from .models import Producto, Compra, Proveedor, Order, OrderItem
 
 class ProveedorSerializer(serializers.ModelSerializer):
     class Meta:
@@ -37,3 +37,16 @@ class   CompraSerializer(serializers.ModelSerializer):
     class Meta:
         model = Compra
         fields = ['id', 'producto', 'usuario','cantidad_vendida', 'fecha_compra']
+class OrderItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OrderItem
+        fields = "__all__"
+
+
+class OrderSerializer(serializers.ModelSerializer):
+    items = OrderItemSerializer(many=True, read_only=True)
+    usuario = serializers.ReadOnlyField(source="usuario.username")
+
+    class Meta:
+        model = Order
+        fields = ['id', 'usuario', 'items', 'total', 'fecha_pedido']

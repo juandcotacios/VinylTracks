@@ -30,3 +30,28 @@ class Compra(models.Model):
         self.producto.cantidad_en_inventario -= self.cantidad_vendida
         self.producto.save()
         super().save(*args, **kwargs)
+# Modelo Order
+class Order(models.Model):
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE, related_name="orders")
+    fecha_pedido = models.DateTimeField(auto_now_add=True)
+    total = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
+
+    def __str__(self):
+        return f"Pedido #{self.id} - Usuario: {self.usuario.username}"
+
+# Modelo OrderItem
+class OrderItem(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="items")
+    producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
+    cantidad = models.PositiveIntegerField()
+    precio_unitario = models.DecimalField(max_digits=10, decimal_places=2)
+
+    def save(self, *args, **kwargs):
+        if self.producto.cantidad_en_inventario < self.cantidad:
+            raise ValueError("No hay suficiente inventario para completar este pedido.")
+        self.producto.cantidad_en_inventario -= self.cantidad
+        self.producto.save()
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"{self.cantidad} x {self.producto.nombre} en Pedido #{self.order.id}"

@@ -24,7 +24,7 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('inventario/', gestionar),
-    path('mainweb/', viewsweb),
+    path('mainweb/', include(('mainweb.urls', 'mainweb'), namespace='mainweb')),
     path('compras/', comprar),
     path('api/', include('api.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

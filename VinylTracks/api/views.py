@@ -6,6 +6,9 @@ from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 from .models import Producto, Compra, Proveedor
 from .serializers import ProductoSerializer, CompraSerializer, ProveedorSerializer, UserSerializer
+from .models import Order, OrderItem
+from .serializers import OrderSerializer, OrderItemSerializer
+from rest_framework import viewsets, permissions
 # Create your views here.
 
 class ProveedorViewSet(viewsets.ModelViewSet):
@@ -49,9 +52,16 @@ class LoginView(APIView):
             return Response({'token': token.key}, status=status.HTTP_200_OK)
         return Response({'error': 'Invalid Credentials'}, status=status.HTTP_400_BAD_REQUEST)
 
-class VentaViewSet(viewsets.ModelViewSet):
-    queryset = Compra.objects.all()
-    serializer_class = CompraSerializer
+class OrderViewSet(viewsets.ModelViewSet):
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
     def perform_create(self, serializer):
-        serializer.save(usuario=self.request.user)   
+        serializer.save(usuario=self.request.user)
+
+
+class OrderItemViewSet(viewsets.ModelViewSet):
+    queryset = OrderItem.objects.all()
+    serializer_class = OrderItemSerializer
+    permission_classes = [permissions.IsAuthenticated]
