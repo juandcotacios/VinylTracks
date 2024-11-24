@@ -9,6 +9,12 @@ from .serializers import ProductoSerializer, CompraSerializer, ProveedorSerializ
 from .models import Order, OrderItem
 from .serializers import OrderSerializer, OrderItemSerializer
 from rest_framework import viewsets, permissions
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
+
+
+
 # Create your views here.
 
 class ProveedorViewSet(viewsets.ModelViewSet):
@@ -66,6 +72,30 @@ class OrderItemViewSet(viewsets.ModelViewSet):
     serializer_class = OrderItemSerializer
     permission_classes = [permissions.IsAuthenticated]
 
+class UserOrdersView(APIView):
+    permission_classes = [IsAuthenticated]
 
+    def get(self, request):
+        orders = Order.objects.filter(usuario=request.user)
+        serializer = OrderSerializer(orders, many=True)
+        return Response(serializer.data)
+class CartValidationView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        carrito = request.data.get("cart", {})
+        errors = []
+        for item in carrito:
+            producto = Producto.objects.get(id=item["product_id"])
+            if producto.cantidad_en_inventario < item["quantity"]:
+                errors.append({
+                    "product_id": producto.id,
+                    "name": producto.nombre,
+                    "error": "No hay suficiente inventario"
+                })
+
+        if errors:
+            return Response({"errors": errors}, status=400)
+        return Response({"message": "Carrito válido"}, status=200)
 
 

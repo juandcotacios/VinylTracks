@@ -95,8 +95,12 @@ def profile_view(request):
     # Vista para añadir productos al carrito
 def add_to_cart(request, product_id):
     producto = get_object_or_404(Producto, id=product_id)
+    cantidad = int(request.POST.get("cantidad", 1))
+    if cantidad > producto.cantidad_en_inventario:
+        return redirect("mainweb:product_detail", product_id=product_id)
+
     carrito = request.session.get("cart", {})
-    carrito[str(product_id)] = carrito.get(str(product_id), 0) + 1
+    carrito[str(product_id)] = carrito.get(str(product_id), 0) + cantidad
     request.session["cart"] = carrito
     return redirect("mainweb:cart")
 
@@ -144,3 +148,9 @@ def checkout(request):
     requests.post(f"{API_BASE_URL}orders/", json=order_data, headers=headers)
     request.session["cart"] = {}
     return redirect("mainweb:user_dashboard")
+def product_detail(request, product_id):
+    producto = get_object_or_404(Producto, id=product_id)
+    context = {
+        "producto": producto
+    }
+    return render(request, "mainweb/product_detail.html", context)
