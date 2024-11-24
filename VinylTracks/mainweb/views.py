@@ -11,10 +11,8 @@ API_BASE_URL = "http://127.0.0.1:8000/api/"
 # Create your views here.
 # Vista principal
 def viewsweb(request):
-    token = request.session.get("auth_token")
-    if not token:
-        return redirect("mainweb:login")
     
+     
     productos = Producto.objects.all()
     context = {
         "productos": productos
@@ -39,7 +37,7 @@ def login_view(request):
             token = response.json().get("token")
             request.session["auth_token"] = token
             print(f"Login successful: token={token}")  # Log para depuración
-            return redirect("mainweb:user_dashboard")
+            return redirect("mainweb:index")
         elif response.status_code == 400:  # Credenciales inválidas
             print("Login failed: Invalid credentials")  # Log para depuración
             return render(request, "mainweb/login.html", {"error": "Credenciales inválidas"})

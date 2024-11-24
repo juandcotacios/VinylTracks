@@ -6,21 +6,19 @@ class CheckAuthTokenMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
-        # Define rutas completas de exclusión usando reverse para evitar conflictos de nombres
         exempt_routes = [
             reverse('mainweb:login'),
             reverse('mainweb:register'),
+            reverse('mainweb:index'),  # Permitir acceso a la página principal
+            '/static/',  # Archivos estáticos
         ]
 
-        # Excluye las solicitudes que van a la API para no interferir con la lógica de backend
-        if request.path.startswith('/api/'):
+        # Excluir API y rutas exentas
+        if request.path.startswith('/api/') or request.path in exempt_routes:
             return self.get_response(request)
 
-        # Verifica si el usuario tiene un token en la sesión
+        # Verifica el token en la sesión
         if not request.session.get("auth_token"):
-            # Permitir el acceso solo si la ruta está en las exentas
-            if request.path not in exempt_routes:
-                return redirect('mainweb:login')
+            return redirect('mainweb:login')
 
-        # Continúa con la solicitud si cumple las condiciones
         return self.get_response(request)
