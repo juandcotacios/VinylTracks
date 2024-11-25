@@ -16,10 +16,21 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.models import User
+from django.shortcuts import render, redirect, get_object_or_404
 
 
 # Create your views here.
 
+class ComprasPorUsuarioView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        # Filtrar las compras realizadas por el usuario autenticado
+        compras = Compra.objects.filter(usuario=request.user)
+        serializer = CompraSerializer(compras, many=True)
+        return Response(serializer.data)
+    
+    
 class UserMeView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -72,7 +83,6 @@ class LoginView(APIView):
             return Response({'token': token.key}, status=status.HTTP_200_OK)
         return Response({'error': 'Invalid Credentials'}, status=status.HTTP_400_BAD_REQUEST)
 
-
 class OrderViewSet(viewsets.ModelViewSet):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
@@ -80,7 +90,6 @@ class OrderViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(usuario=self.request.user)
-
 
 class OrderItemViewSet(viewsets.ModelViewSet):
     queryset = OrderItem.objects.all()

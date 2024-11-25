@@ -51,12 +51,13 @@ class UserSerializer(serializers.ModelSerializer):
         user.save()
         return user 
         
-class   CompraSerializer(serializers.ModelSerializer):
-    producto = serializers.PrimaryKeyRelatedField(queryset=Producto.objects.all())
-    usuario = serializers.ReadOnlyField(source='usuario.username') 
+class CompraSerializer(serializers.ModelSerializer):
+    producto = ProductoSerializer(read_only=True)
+    usuario = serializers.ReadOnlyField(source="usuario.username")
+
     class Meta:
         model = Compra
-        fields = ['id', 'producto', 'usuario','cantidad_vendida', 'fecha_compra']
+        fields = ['id', 'producto', 'usuario', 'cantidad_vendida', 'fecha_compra']
 
 
 class OrderItemSerializer(serializers.ModelSerializer):
@@ -65,7 +66,6 @@ class OrderItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = OrderItem
         fields = "__all__"
-
 
 class OrderSerializer(serializers.ModelSerializer):
     items = OrderItemSerializer(many=True, read_only=True)

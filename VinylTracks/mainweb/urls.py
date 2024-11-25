@@ -1,8 +1,6 @@
-
 from django.urls import path
 from .views import viewsweb, login_view, register_view, user_dashboard, logout_view, profile_view,add_to_cart,  view_cart, checkout, profile_view
 from .views import product_detail, viewsweb, remove_from_cart
-
 
 app_name = 'mainweb'
 urlpatterns = [
@@ -20,3 +18,4 @@ urlpatterns = [
     path("remove-from-cart/<int:product_id>/", remove_from_cart, name="remove_from_cart"),
     
 ]
+

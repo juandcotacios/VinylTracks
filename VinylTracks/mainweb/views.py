@@ -9,6 +9,7 @@ from .utils import token_required
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.auth import update_session_auth_hash
+from api.models import Compra
 
 API_BASE_URL = "http://127.0.0.1:8000/api/"
 
@@ -86,7 +87,6 @@ def login_view(request):
 
 
 
-
 def register_view(request):
     if request.method == "POST":
         username = request.POST.get("username")
@@ -120,18 +120,23 @@ def user_dashboard(request):
     response = requests.get(f"{API_BASE_URL}users/me/", headers=headers)
     if response.status_code == 200:
         user_data = response.json()
+
         # Filtrar pedidos por el usuario autenticado
         orders = Order.objects.filter(usuario=request.user).prefetch_related('items__producto')
 
+        # Obtener compras realizadas por el usuario autenticado
+        compras = Compra.objects.filter(usuario=request.user)
 
         context = {
             "user": user_data,
             "orders": orders,
+            "compras": compras,  # Añadir las compras al contexto
         }
         return render(request, "mainweb/user_dashboard.html", context)
     else:
         # Redirigir al login si hay un error en la API
         return redirect("mainweb:login")
+
     
 
 def logout_view(request):
@@ -148,7 +153,6 @@ def logout_view(request):
 
     # Redirigir al usuario a la página principal no autenticada
     return redirect("mainweb:index")
-
 
 
 @token_required
@@ -183,7 +187,6 @@ def profile_view(request):
 
     # Si es una solicitud GET, mostrar la información del usuario.
     return render(request, "mainweb/profile.html", {"user": user})
-
 
 
 @token_required    
@@ -221,7 +224,6 @@ def remove_from_cart(request, product_id):
     # Redirigir al carrito para mostrar los cambios
     return redirect("mainweb:cart")
 
-
 # Vista para mostrar el carrito
 @token_required
 def view_cart(request):
@@ -252,7 +254,6 @@ def checkout(request):
 
     # Verificar si el carrito está vacío
     if not carrito:
-        # Redirigir al dashboard si no hay productos en el carrito
         return redirect("mainweb:user_dashboard")
 
     headers = {"Authorization": f"Token {request.auth_token}"}
@@ -262,18 +263,29 @@ def checkout(request):
     # Crear los datos del pedido basados en el carrito
     for product_id, cantidad in carrito.items():
         producto = Producto.objects.get(id=product_id)
-        total += float(producto.precio) * cantidad  # Convertir Decimal a float
+        total += float(producto.precio) * cantidad
+
+        # Añadir los detalles del producto al pedido
         order_data["items"].append({
             "producto": product_id,
             "cantidad": cantidad,
-            "precio_unitario": float(producto.precio)  # Convertir Decimal a float
+            "precio_unitario": float(producto.precio)
         })
+
+        # Registrar la compra en el modelo Compra
+        Compra.objects.create(
+            producto=producto,
+            usuario=request.user,
+            cantidad_vendida=cantidad
+        )
+
+        # Reducir el inventario del producto
         producto.cantidad_en_inventario -= cantidad
         producto.save()
 
-    order_data["total"] = float(total)  # Convertir Decimal a float
+    order_data["total"] = float(total)
 
-    # Enviar la solicitud al endpoint de la API
+    # Enviar la solicitud al endpoint de la API (opcional)
     response = requests.post(f"{API_BASE_URL}orders/", json=order_data, headers=headers)
     if response.status_code != 201:
         print(f"Error al crear el pedido: {response.status_code} - {response.text}")
@@ -283,7 +295,6 @@ def checkout(request):
 
     # Redirigir al dashboard del usuario después del checkout
     return redirect("mainweb:user_dashboard")
-
 
 
 def product_detail(request, product_id):

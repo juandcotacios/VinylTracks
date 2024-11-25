@@ -153,6 +153,7 @@
         </div>
         <!-- Content -->
         <div class="content">
+            <!-- Historial de Pedidos -->
             <h2>Historial de Pedidos</h2>
             {% if orders %}
                 <table>
@@ -184,6 +185,32 @@
             {% else %}
                 <p class="empty-orders">Aún no has realizado ningún pedido.</p>
             {% endif %}
+
+            <!-- Historial de Compras -->
+            <h2>Historial de Compras</h2>
+            {% if compras %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Cantidad Vendida</th>
+                            <th>Fecha de Compra</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for compra in compras %}
+                            <tr>
+                                <td>{{ compra.producto.nombre }}</td>
+                                <td>{{ compra.cantidad_vendida }}</td>
+                                <td>{{ compra.fecha_compra }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p class="empty-orders">Aún no has realizado ninguna compra.</p>
+            {% endif %}
+
             <a href="{% url 'mainweb:index' %}" class="btn-back">Volver a la Tienda</a>
         </div>
     </main>
