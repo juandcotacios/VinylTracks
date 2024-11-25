@@ -1,5 +1,4 @@
 {% load static %}
-
 <!DOCTYPE html>
 <html lang="es">
 
@@ -8,11 +7,120 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crear Cuenta</title>
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #8B0000; /* Rojo vinotinto */
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+        }
+
+        .logo {
+            font-size: 36px;
+            font-weight: bold;
+        }
+
+        main {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: calc(100vh - 80px); /* Altura total menos el header */
+        }
+
+        .register-container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .register-container h2 {
+            text-align: center;
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: bold;
+            color: #555;
+            margin-bottom: 5px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .form-group input:focus {
+            border-color: #8B0000;
+            outline: none;
+            box-shadow: 0px 0px 5px rgba(139, 0, 0, 0.4);
+        }
+
+        button {
+            display: block;
+            width: 100%;
+            background-color: #8B0000;
+            color: white;
+            padding: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #600000;
+        }
+
+        .error-message {
+            color: red;
+            font-size: 14px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .login-link a {
+            color: #8B0000;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 
 <body>
     <header>
-        <div class="logo">VinylTracks</div>
+        <h1 class="logo">VinylTracks</h1>
     </header>
     <main>
         <div class="register-container">
@@ -20,7 +128,7 @@
             <form method="POST" action="{% url 'mainweb:register' %}">
                 {% csrf_token %}
                 {% if error %}
-                <p style="color: red;">{{ error }}</p>
+                    <p class="error-message">{{ error }}</p>
                 {% endif %}
                 <div class="form-group">
                     <label for="username">Usuario</label>
@@ -36,6 +144,9 @@
                 </div>
                 <button type="submit">Registrar</button>
             </form>
+            <div class="login-link">
+                <p>¿Ya tienes una cuenta? <a href="{% url 'mainweb:login' %}">Inicia sesión aquí</a></p>
+            </div>
         </div>
     </main>
 </body>

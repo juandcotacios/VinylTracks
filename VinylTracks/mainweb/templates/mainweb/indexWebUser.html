@@ -52,6 +52,16 @@
             background-color: #505050; /* Gris más oscuro */
         }
 
+        .welcome-banner {
+            background-color: #FFF5E5;
+            color: #8B0000;
+            text-align: center;
+            padding: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            margin: 0;
+        }
+
         nav {
             background-color: white;
             padding: 10px 0;
@@ -141,6 +151,13 @@
             {% endif %}
         </div>
     </header>
+
+    {% if is_authenticated %}
+        <div class="welcome-banner">
+            Bienvenid@, {{ request.session.username }} <!-- Muestra el nombre del usuario -->
+        </div>
+    {% endif %}
+
     <nav>
         <ul>
             <li><a href="{% url 'mainweb:index' %}">Inicio</a></li>

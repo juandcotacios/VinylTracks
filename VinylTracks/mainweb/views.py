@@ -11,14 +11,18 @@ API_BASE_URL = "http://127.0.0.1:8000/api/"
 # Create your views here.
 # Vista principal
 def viewsweb(request):
-    
-     
     productos = Producto.objects.all()
+
+    # Agregar información del usuario al contexto
     context = {
-        "productos": productos
+        "productos": productos,
+        "is_authenticated": request.session.get("auth_token") is not None,
+        "username": request.session.get("username", None),
     }
+
     return render(request, "mainweb/indexWebUser.html", context)
 
+# Vista de inicio de sesión
 # Vista de inicio de sesión
 def login_view(request):
     if request.method == "POST":
@@ -36,14 +40,33 @@ def login_view(request):
             # Manejar la respuesta de la API
             if response.status_code == 200:  # Inicio de sesión exitoso
                 token = response.json().get("token")
-                request.session["auth_token"] = token
-                request.session["username"] = username  # Guarda también el nombre de usuario
 
-                print(f"Login successful: token={token}")  # Log para depuración
-                return redirect("mainweb:index")  # Redirige al usuario a la página principal
+                # Verificar y obtener detalles del usuario desde el endpoint de usuario
+                user_response = requests.get(
+                    f"{API_BASE_URL}users/me/",
+                    headers={"Authorization": f"Token {token}"}
+                )
+
+                if user_response.status_code == 200:  # Detalles del usuario obtenidos con éxito
+                    user_data = user_response.json()
+                    username = user_data.get("username")  # Obtener el nombre de usuario desde la API
+
+                    # Almacenar el token y el nombre del usuario en la sesión
+                    request.session["auth_token"] = token
+                    request.session["username"] = username
+
+                    print(f"Login successful: token={token}, username={username}")  # Log para depuración
+                    return redirect("mainweb:index")  # Redirige al usuario a la página principal
+
+                else:
+                    # Error al obtener los datos del usuario
+                    print(f"Error fetching user details: {user_response.status_code} - {user_response.text}")
+                    return render(request, "mainweb/login.html", {"error": "Error al obtener los datos del usuario. Intente nuevamente."})
+
             elif response.status_code == 400:  # Credenciales inválidas
                 print("Login failed: Invalid credentials")  # Log para depuración
                 return render(request, "mainweb/login.html", {"error": "Credenciales inválidas"})
+
             else:  # Otros errores
                 print(f"Login error: {response.status_code} - {response.text}")  # Log para depuración
                 return render(request, "mainweb/login.html", {"error": "Error inesperado al intentar iniciar sesión"})
@@ -55,6 +78,7 @@ def login_view(request):
 
     # Renderizar la página de inicio de sesión para solicitudes GET
     return render(request, "mainweb/login.html")
+
 
 
 
@@ -110,6 +134,7 @@ def user_dashboard(request):
     
 
 def logout_view(request):
+    
     # Elimina únicamente los datos relacionados con la sesión del usuario
     if "auth_token" in request.session:
         del request.session["auth_token"]  # Eliminar el token de autenticación
@@ -119,7 +144,7 @@ def logout_view(request):
     # Puedes limpiar otros datos específicos del usuario si los tienes
     if "cart" in request.session:
         del request.session["cart"]  # Vaciar el carrito si está presente
-
+    request.session.flush()
     # Redirige al usuario a la página de inicio de sesión
     return redirect("mainweb:login")
 
