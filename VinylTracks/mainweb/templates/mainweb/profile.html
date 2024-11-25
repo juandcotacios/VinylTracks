@@ -1,0 +1,149 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil de Usuario</title>
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #8B0000; /* Rojo vinotinto */
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        main {
+            max-width: 600px;
+            margin: 30px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        form div {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        label {
+            font-weight: bold;
+            color: #333;
+        }
+
+        input {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        input:focus {
+            border-color: #8B0000;
+            outline: none;
+            box-shadow: 0px 0px 5px rgba(139, 0, 0, 0.3);
+        }
+
+        button {
+            background-color: #8B0000;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 15px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #600000;
+        }
+
+        .message {
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .message.error {
+            background-color: #ffdddd;
+            color: #d8000c;
+        }
+
+        .message.success {
+            background-color: #ddffdd;
+            color: #4caf50;
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            text-decoration: none;
+            font-weight: bold;
+            color: #8B0000;
+            transition: color 0.3s;
+        }
+
+        .back-link:hover {
+            color: #600000;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Perfil de Usuario</h1>
+    </header>
+    <main>
+        {% if error %}
+            <p class="message error">{{ error }}</p>
+        {% endif %}
+        {% if success %}
+            <p class="message success">{{ success }}</p>
+        {% endif %}
+        <form method="POST">
+            {% csrf_token %}
+            <div>
+                <label for="username">Nombre de Usuario:</label>
+                <input type="text" id="username" name="username" value="{{ user.username }}" required>
+            </div>
+            <div>
+                <label for="email">Correo Electrónico:</label>
+                <input type="email" id="email" name="email" value="{{ user.email }}" required>
+            </div>
+            <div>
+                <label for="password">Nueva Contraseña:</label>
+                <input type="password" id="password" name="password" placeholder="Dejar en blanco para no cambiar">
+            </div>
+            <button type="submit">Actualizar Perfil</button>
+        </form>
+        <a href="{% url 'mainweb:user_dashboard' %}" class="back-link">← Volver al Panel</a>
+    </main>
+</body>
+</html>

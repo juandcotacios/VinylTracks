@@ -6,6 +6,9 @@ from django.contrib.auth.decorators import login_required
 from api.models import Producto, Order 
 from django.shortcuts import render, redirect, get_object_or_404
 from .utils import token_required 
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from django.contrib.auth import update_session_auth_hash
 
 API_BASE_URL = "http://127.0.0.1:8000/api/"
 
@@ -150,27 +153,39 @@ def logout_view(request):
 
 @token_required
 def profile_view(request):
-    headers = {"Authorization": f"Token {token}"}
-    if request.method == "POST":
-        data = {
-            "first_name": request.POST.get("first_name"),
-            "last_name": request.POST.get("last_name"),
-            "birthday": request.POST.get("birthday"),
-        }
-        response = requests.put(f"{API_BASE_URL}users/me/", data=data, headers=headers)
-        if response.status_code == 200:
-            return redirect("mainweb:profile")
-        else:
-            error = response.json().get("error", "Error al actualizar el perfil.")
-            return render(request, "mainweb/profile.html", {"error": error})
+    headers = {"Authorization": f"Token {request.auth_token}"}
+    user = request.user
 
-    response = requests.get(f"{API_BASE_URL}users/me/", headers=headers)
-    if response.status_code == 200:
-        user_data = response.json()
-        return render(request, "mainweb/profile.html", {"user": user_data})
-    else:
-        return redirect("mainweb:login")
-    # Vista para añadir productos al carrito
+    if request.method == "POST":
+        username = request.POST.get("username")
+        email = request.POST.get("email")
+        password = request.POST.get("password")
+
+        # Validaciones para el nombre de usuario
+        if username and username != user.username:
+            if User.objects.filter(username=username).exists():
+                return render(request, "mainweb/profile.html", {"user": user, "error": "El nombre de usuario ya está en uso."})
+            user.username = username
+
+        # Validaciones para el correo electrónico
+        if email and email != user.email:
+            if User.objects.filter(email=email).exists():
+                return render(request, "mainweb/profile.html", {"user": user, "error": "El correo electrónico ya está en uso."})
+            user.email = email
+
+        # Cambiar contraseña si se proporciona
+        if password:
+            user.set_password(password)
+            update_session_auth_hash(request, user)  # Mantiene la sesión activa tras el cambio de contraseña.
+
+        user.save()
+        return render(request, "mainweb/profile.html", {"user": user, "success": "Perfil actualizado con éxito."})
+
+    # Si es una solicitud GET, mostrar la información del usuario.
+    return render(request, "mainweb/profile.html", {"user": user})
+
+
+
 @token_required    
 def add_to_cart(request, product_id):
     # Si el usuario está autenticado, proceder con la lógica de agregar al carrito

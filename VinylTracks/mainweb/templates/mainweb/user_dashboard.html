@@ -1,5 +1,4 @@
 {% load static %}
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -20,7 +19,6 @@
             color: white;
             padding: 20px 0;
             text-align: center;
-            position: relative;
         }
 
         .logo {
@@ -29,82 +27,38 @@
             margin: 0;
         }
 
-        nav ul {
-            display: flex;
-            justify-content: center;
-            list-style: none;
-            padding: 0;
-            margin: 10px 0 0;
-        }
-
-        nav ul li {
-            margin: 0 15px;
-        }
-
-        nav ul li a {
-            text-decoration: none;
-            color: white;
-            font-weight: bold;
-            padding: 8px 15px;
-            border-radius: 5px;
-            background-color: #505050;
-            transition: background-color 0.3s;
-        }
-
-        nav ul li a:hover {
-            background-color: #333;
-        }
-
         main {
-            max-width: 1000px;
+            display: flex;
+            gap: 20px;
+            max-width: 1200px;
             margin: 30px auto;
             padding: 20px;
-            background-color: white;
+        }
+
+        .sidebar {
+            flex: 1;
+            background-color: #fff;
+            padding: 20px;
             border-radius: 10px;
             box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
         }
 
-        h2 {
-            font-size: 28px;
+        .content {
+            flex: 3;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        h2, h3 {
+            font-size: 24px;
             color: #333;
-            margin-bottom: 20px;
-            text-align: center;
         }
 
-        section {
-            margin-bottom: 30px;
-        }
-
-        section h3 {
-            font-size: 20px;
-            color: #8B0000;
-            margin-bottom: 15px;
-        }
-
-        .user-dashboard ul {
+        .options ul {
             list-style: none;
             padding: 0;
-        }
-
-        .user-dashboard ul li {
-            padding: 15px;
-            border-bottom: 1px solid #ddd;
-        }
-
-        .user-dashboard ul li:last-child {
-            border-bottom: none;
-        }
-
-        .user-dashboard ul li strong {
-            font-size: 16px;
-            color: #333;
-        }
-
-        .user-dashboard ul li ul {
-            margin-top: 10px;
-            padding-left: 20px;
-            font-size: 14px;
-            color: #666;
         }
 
         .options ul li {
@@ -114,70 +68,123 @@
         .options ul li a {
             text-decoration: none;
             font-size: 16px;
-            color: #8B0000;
+            color: white;
             font-weight: bold;
-            transition: color 0.3s;
+            display: block;
+            text-align: center;
+            background-color: #8B0000;
+            padding: 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s, transform 0.2s;
         }
 
         .options ul li a:hover {
-            color: #600000;
+            background-color: #600000;
+            transform: scale(1.05);
+        }
+
+        .btn-back {
+            display: inline-block;
+            margin-top: 20px;
+            background-color: #8B0000;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        .btn-back:hover {
+            background-color: #600000;
+            transform: scale(1.05);
+        }
+
+        /* Tabla de historial */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+
+        table th, table td {
+            text-align: left;
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+
+        table th {
+            background-color: #8B0000;
+            color: white;
+        }
+
+        table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        table tr:hover {
+            background-color: #f1f1f1;
         }
 
         .empty-orders {
             text-align: center;
             font-size: 18px;
             color: #666;
-            margin: 20px 0;
+            margin-top: 20px;
         }
     </style>
 </head>
 <body>
     <header>
         <h1 class="logo">VinylTracks</h1>
-        <nav>
-            <ul>
-                <li><a href="{% url 'mainweb:index' %}">Volver a la Tienda</a></li>
-                <li><a href="{% url 'mainweb:logout' %}">Cerrar Sesión</a></li>
-            </ul>
-        </nav>
     </header>
     <main>
-        <div class="user-dashboard">
-            <h2>Bienvenido de nuevo, {{ user.username }}</h2>
-
-            <!-- Historial de Pedidos -->
-            <section>
-                <h3>Historial de Pedidos</h3>
-                {% if orders %}
-                    <ul>
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <h3>Opciones</h3>
+            <ul class="options">
+                <li><a href="{% url 'mainweb:user_dashboard' %}">Historial de Pedidos</a></li>
+                <li><a href="{% url 'mainweb:profile' %}">Perfil</a></li>
+                <li><a href="{% url 'mainweb:logout' %}">Cerrar Sesión</a></li>
+            </ul>
+        </div>
+        <!-- Content -->
+        <div class="content">
+            <h2>Historial de Pedidos</h2>
+            {% if orders %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th># Pedido</th>
+                            <th>Fecha</th>
+                            <th>Detalles</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
                         {% for order in orders %}
-                            <li>
-                                <strong>Pedido #{{ order.id }}</strong> - Fecha: {{ order.fecha_pedido }}
-                                <ul>
-                                    {% for item in order.items.all %}
-                                        <li>
-                                            {{ item.cantidad }} x {{ item.producto.nombre }} - ${{ item.precio_unitario }}
-                                        </li>
-                                    {% endfor %}
-                                </ul>
-                                <strong>Total:</strong> ${{ order.total }}
-                            </li>
+                            <tr>
+                                <td>{{ order.id }}</td>
+                                <td>{{ order.fecha_pedido }}</td>
+                                <td>
+                                    <ul>
+                                        {% for item in order.items.all %}
+                                            <li>{{ item.cantidad }} x {{ item.producto.nombre }} - ${{ item.precio_unitario }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </td>
+                                <td>${{ order.total }}</td>
+                            </tr>
                         {% endfor %}
-                    </ul>
-                {% else %}
-                    <p class="empty-orders">Aún no has realizado ningún pedido.</p>
-                {% endif %}
-            </section>
-
-            <!-- Opciones del Usuario -->
-            <section class="options">
-                <h3>Opciones</h3>
-                <ul>
-                    <li><a href="{% url 'mainweb:user_dashboard' %}">Historial de Pedidos</a></li>
-                    <li><a href="{% url 'mainweb:profile' %}">Perfil</a></li>
-                    <li><a href="{% url 'mainweb:logout' %}">Cerrar Sesión</a></li>
-                </ul>
-            </section>
+                    </tbody>
+                </table>
+            {% else %}
+                <p class="empty-orders">Aún no has realizado ningún pedido.</p>
+            {% endif %}
+            <a href="{% url 'mainweb:index' %}" class="btn-back">Volver a la Tienda</a>
         </div>
     </main>
 </body>

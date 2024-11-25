@@ -53,7 +53,7 @@
         }
 
         .welcome-banner {
-            background-color: #FFF5E5;
+            background-color: #f2f2f2f0;
             color: #8B0000;
             text-align: center;
             padding: 10px;
@@ -143,6 +143,7 @@
         <h1 class="logo">VinylTracks</h1>
         <div class="auth-buttons">
             {% if is_authenticated %}
+                 <a href="{% url 'mainweb:user_dashboard' %}">Perfil</a>
                 <a href="{% url 'mainweb:cart' %}">Mi Carrito</a>
                 <a href="{% url 'mainweb:logout' %}">Cerrar Sesión</a>
             {% else %}

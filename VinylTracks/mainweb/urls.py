@@ -1,7 +1,8 @@
 
 from django.urls import path
-from .views import viewsweb, login_view, register_view, user_dashboard, logout_view, profile_view,add_to_cart,  view_cart, checkout
+from .views import viewsweb, login_view, register_view, user_dashboard, logout_view, profile_view,add_to_cart,  view_cart, checkout, profile_view
 from .views import product_detail, viewsweb
+
 
 app_name = 'mainweb'
 urlpatterns = [
@@ -15,5 +16,6 @@ urlpatterns = [
     path("add-to-cart/<int:product_id>/", add_to_cart, name="add_to_cart"),  
     path("checkout/", checkout, name="checkout"),  
     path("product/<int:product_id>/", product_detail, name="product_detail"),
+    path("profile/", profile_view, name="profile"),
     
 ]

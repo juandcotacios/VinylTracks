@@ -199,3 +199,39 @@ nav ul li a {
 .user-dashboard a:hover {
     text-decoration: underline;
 }
+.sidebar .options ul {
+    list-style: none; /* Eliminar los puntos */
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar .options ul li {
+    margin-bottom: 15px; /* Espaciado entre los botones */
+}
+
+.sidebar .options ul li a {
+    display: block;
+    text-align: center;
+    padding: 12px 15px;
+    font-size: 16px;
+    font-weight: bold;
+    color: white; /* Texto blanco */
+    background-color: #8B0000; /* Rojo vinotinto */
+    border-radius: 8px; /* Bordes redondeados */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Sombra suave */
+    text-decoration: none; /* Eliminar subrayado */
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.sidebar .options ul li a:hover {
+    background-color: #600000; /* Rojo más oscuro */
+    transform: translateY(-3px); /* Efecto de elevación */
+    box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.2); /* Sombra más intensa */
+}
+
+.sidebar h3 {
+    font-size: 20px;
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center;
+}
