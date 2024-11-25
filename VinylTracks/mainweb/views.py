@@ -206,6 +206,21 @@ def add_to_cart(request, product_id):
     # Redirigir al carrito después de agregar el producto
     return redirect("mainweb:cart")
 
+@token_required
+def remove_from_cart(request, product_id):
+    # Obtener el carrito actual de la sesión
+    carrito = request.session.get("cart", {})
+    
+    # Verificar si el producto está en el carrito
+    if str(product_id) in carrito:
+        del carrito[str(product_id)]  # Eliminar el producto del carrito
+    
+    # Guardar el carrito actualizado en la sesión
+    request.session["cart"] = carrito
+    
+    # Redirigir al carrito para mostrar los cambios
+    return redirect("mainweb:cart")
+
 
 # Vista para mostrar el carrito
 @token_required

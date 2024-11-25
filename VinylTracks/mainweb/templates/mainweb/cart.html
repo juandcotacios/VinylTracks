@@ -119,6 +119,29 @@
             font-size: 16px;
             font-weight: bold;
             color: #8B0000;
+            margin-right: 20px;
+        }
+
+        .cart-item-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .button {
+            text-decoration: none;
+            background-color: #8B0000;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 5px;
+            font-weight: bold;
+            text-align: center;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+
+        .button:hover {
+            background-color: #600000;
         }
 
         .total {
@@ -133,22 +156,6 @@
             display: flex;
             justify-content: space-between;
             margin-top: 30px;
-        }
-
-        .button {
-            text-decoration: none;
-            display: inline-block;
-            background-color: #8B0000;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 5px;
-            font-weight: bold;
-            text-align: center;
-            transition: background-color 0.3s;
-        }
-
-        .button:hover {
-            background-color: #600000;
         }
 
         .empty-cart {
@@ -179,14 +186,17 @@
         {% if productos_en_carrito %}
             <ul class="cart-items">
                 {% for item in productos_en_carrito %}
-                    <li class="cart-item">
-                        <img src="{{ item.producto.imagen.url }}" alt="{{ item.producto.nombre }}">
-                        <div class="cart-item-details">
-                            <span class="cart-item-name">{{ item.producto.nombre }}</span>
-                            <span class="cart-item-quantity">{{ item.cantidad }} x ${{ item.producto.precio }}</span>
-                        </div>
+                <li class="cart-item">
+                    <img src="{{ item.producto.imagen.url }}" alt="{{ item.producto.nombre }}">
+                    <div class="cart-item-details">
+                        <span class="cart-item-name">{{ item.producto.nombre }}</span>
+                        <span class="cart-item-quantity">{{ item.cantidad }} x ${{ item.producto.precio }}</span>
+                    </div>
+                    <div class="cart-item-actions">
                         <span class="cart-item-price">${{ item.subtotal }}</span>
-                    </li>
+                        <a href="{% url 'mainweb:remove_from_cart' item.producto.id %}" class="button">Eliminar</a>
+                    </div>
+                </li>
                 {% endfor %}
             </ul>
             <div class="total">
