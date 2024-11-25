@@ -120,6 +120,7 @@ def user_dashboard(request):
         # Filtrar pedidos por el usuario autenticado
         orders = Order.objects.filter(usuario=request.user).prefetch_related('items__producto')
 
+
         context = {
             "user": user_data,
             "orders": orders,
@@ -128,7 +129,6 @@ def user_dashboard(request):
     else:
         # Redirigir al login si hay un error en la API
         return redirect("mainweb:login")
-
     
 
 def logout_view(request):

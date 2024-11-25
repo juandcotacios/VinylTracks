@@ -154,7 +154,7 @@
                             <li>
                                 <strong>Pedido #{{ order.id }}</strong> - Fecha: {{ order.fecha_pedido }}
                                 <ul>
-                                    {% for item in order.items %}
+                                    {% for item in order.items.all %}
                                         <li>
                                             {{ item.cantidad }} x {{ item.producto.nombre }} - ${{ item.precio_unitario }}
                                         </li>
