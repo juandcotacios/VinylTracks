@@ -288,7 +288,12 @@ def checkout(request):
 
 def product_detail(request, product_id):
     producto = get_object_or_404(Producto, id=product_id)
+
+    # Obtener 4 productos aleatorios, excluyendo el producto actual
+    productos_relacionados = Producto.objects.exclude(id=product_id).order_by('?')[:4]
+
     context = {
-        "producto": producto
+        "producto": producto,
+        "productos_relacionados": productos_relacionados,
     }
     return render(request, "mainweb/product_detail.html", context)

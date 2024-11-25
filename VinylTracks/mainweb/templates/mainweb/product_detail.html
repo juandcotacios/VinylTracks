@@ -145,13 +145,69 @@
 
         .back-link a {
             text-decoration: none;
-            color: #8B0000;
+            color: #000000;
             font-weight: bold;
             transition: color 0.3s;
         }
 
         .back-link a:hover {
             color: #600000;
+        }
+
+        /* Productos relacionados */
+        .related-products {
+            margin-top: 50px;
+            text-align: center;
+        }
+
+        .related-products h3 {
+            font-size: 24px;
+            color: #8B0000;
+            margin-bottom: 20px;
+        }
+
+        .related-products-list {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .related-product-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            width: 200px;
+            text-align: center;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .related-product-card img {
+            width: 100%;
+            height: auto;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .related-product-name {
+            font-size: 16px;
+            font-weight: bold;
+            margin: 10px 0;
+            color: #333;
+        }
+
+        .related-product-price {
+            font-size: 14px;
+            color: #8B0000;
+            margin-bottom: 10px;
+        }
+
+        .related-product-card a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .related-product-card a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
@@ -191,6 +247,21 @@
                     <input type="number" id="cantidad" name="cantidad" value="1" min="1" max="{{ producto.cantidad_en_inventario }}">
                     <button type="submit">Añadir al Carrito</button>
                 </form>
+            </div>
+        </div>
+        <!-- Productos relacionados -->
+        <div class="related-products">
+            <h3>Productos Relacionados</h3>
+            <div class="related-products-list">
+                {% for related in productos_relacionados %}
+                    <div class="related-product-card">
+                        <a href="{% url 'mainweb:product_detail' related.id %}">
+                            <img src="{{ related.imagen.url }}" alt="{{ related.nombre }}">
+                            <p class="related-product-name">{{ related.nombre }}</p>
+                            <p class="related-product-price">${{ related.precio }}</p>
+                        </a>
+                    </div>
+                {% endfor %}
             </div>
         </div>
         <!-- Enlace para volver a la tienda -->
