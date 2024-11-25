@@ -32,3 +32,5 @@ class CheckAuthTokenMiddleware:
 
         # Si todo está bien, continuar con la solicitud
         return self.get_response(request)
+    
+    

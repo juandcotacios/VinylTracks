@@ -5,6 +5,7 @@ import requests
 from django.contrib.auth.decorators import login_required
 from api.models import Producto, Order 
 from django.shortcuts import render, redirect, get_object_or_404
+from .utils import token_required 
 
 API_BASE_URL = "http://127.0.0.1:8000/api/"
 
@@ -108,29 +109,26 @@ def register_view(request):
     # Renderizar la página de registro para solicitudes GET
     return render(request, "mainweb/register.html")
 
-
-@login_required
+@token_required
 def user_dashboard(request):
-    token = request.session.get("auth_token")
-    if not token:
-        return redirect("mainweb:login")
-    
-    # Obtener datos del usuario a través de la API
-    headers = {"Authorization": f"Token {token}"}
+    headers = {"Authorization": f"Token {request.auth_token}"}
+
+    # Obtener datos del usuario desde la API
     response = requests.get(f"{API_BASE_URL}users/me/", headers=headers)
-    
     if response.status_code == 200:
         user_data = response.json()
-        orders = Order.objects.filter(usuario=request.user)
+        # Filtrar pedidos por el usuario autenticado
+        orders = Order.objects.filter(usuario=request.user).prefetch_related('items__producto')
+
         context = {
             "user": user_data,
             "orders": orders,
         }
-        print("Dashboard loaded successfully.")  # Log para depuración
         return render(request, "mainweb/user_dashboard.html", context)
     else:
-        print(f"Error loading dashboard: {response.status_code} - {response.text}")  # Log para depuración
+        # Redirigir al login si hay un error en la API
         return redirect("mainweb:login")
+
     
 
 def logout_view(request):
@@ -150,9 +148,8 @@ def logout_view(request):
 
 
 
-@login_required
+@token_required
 def profile_view(request):
-    token = request.session.get("auth_token")
     headers = {"Authorization": f"Token {token}"}
     if request.method == "POST":
         data = {
@@ -174,13 +171,8 @@ def profile_view(request):
     else:
         return redirect("mainweb:login")
     # Vista para añadir productos al carrito
+@token_required    
 def add_to_cart(request, product_id):
-    # Verificar si el usuario tiene un token en la sesión
-    token = request.session.get("auth_token")
-    if not token:
-        # Redirigir al login si el usuario no está autenticado
-        return redirect("mainweb:login")
-
     # Si el usuario está autenticado, proceder con la lógica de agregar al carrito
     producto = get_object_or_404(Producto, id=product_id)
     cantidad = int(request.POST.get("cantidad", 1))
@@ -201,6 +193,7 @@ def add_to_cart(request, product_id):
 
 
 # Vista para mostrar el carrito
+@token_required
 def view_cart(request):
     carrito = request.session.get("cart", {})
     productos_en_carrito = []
@@ -222,14 +215,8 @@ def view_cart(request):
 
 # Vista para procesar el checkout
 
-
+@token_required
 def checkout(request):
-    # Verificar si el usuario tiene un token en la sesión
-    token = request.session.get("auth_token")
-    if not token:
-        # Redirigir al login si el usuario no está autenticado
-        return redirect("mainweb:login")
-
     # Obtener el carrito desde la sesión
     carrito = request.session.get("cart", {})
 
@@ -238,7 +225,7 @@ def checkout(request):
         # Redirigir al dashboard si no hay productos en el carrito
         return redirect("mainweb:user_dashboard")
 
-    headers = {"Authorization": f"Token {token}"}
+    headers = {"Authorization": f"Token {request.auth_token}"}
     order_data = {"items": []}
     total = 0
 
