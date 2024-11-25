@@ -25,28 +25,37 @@ def login_view(request):
         username = request.POST.get("username")
         password = request.POST.get("password")
 
-        # Enviar solicitud al endpoint de inicio de sesión
-        response = requests.post(
-            f"{API_BASE_URL}login/",
-            data={"username": username, "password": password},
-            allow_redirects=False
-        )
+        try:
+            # Enviar solicitud al endpoint de inicio de sesión
+            response = requests.post(
+                f"{API_BASE_URL}login/",
+                data={"username": username, "password": password},
+                allow_redirects=False
+            )
 
-        # Manejar la respuesta de la API
-        if response.status_code == 200:  # Inicio de sesión exitoso
-            token = response.json().get("token")
-            request.session["auth_token"] = token
-            print(f"Login successful: token={token}")  # Log para depuración
-            return redirect("mainweb:index")
-        elif response.status_code == 400:  # Credenciales inválidas
-            print("Login failed: Invalid credentials")  # Log para depuración
-            return render(request, "mainweb/login.html", {"error": "Credenciales inválidas"})
-        else:  # Otros errores
-            print(f"Login error: {response.status_code} - {response.text}")  # Log para depuración
-            return render(request, "mainweb/login.html", {"error": "Error inesperado al intentar iniciar sesión"})
+            # Manejar la respuesta de la API
+            if response.status_code == 200:  # Inicio de sesión exitoso
+                token = response.json().get("token")
+                request.session["auth_token"] = token
+                request.session["username"] = username  # Guarda también el nombre de usuario
+
+                print(f"Login successful: token={token}")  # Log para depuración
+                return redirect("mainweb:index")  # Redirige al usuario a la página principal
+            elif response.status_code == 400:  # Credenciales inválidas
+                print("Login failed: Invalid credentials")  # Log para depuración
+                return render(request, "mainweb/login.html", {"error": "Credenciales inválidas"})
+            else:  # Otros errores
+                print(f"Login error: {response.status_code} - {response.text}")  # Log para depuración
+                return render(request, "mainweb/login.html", {"error": "Error inesperado al intentar iniciar sesión"})
+
+        except requests.RequestException as e:
+            # Manejo de errores de conexión o red
+            print(f"Login exception: {str(e)}")  # Log para depuración
+            return render(request, "mainweb/login.html", {"error": "Error al conectar con el servidor. Intente nuevamente."})
 
     # Renderizar la página de inicio de sesión para solicitudes GET
     return render(request, "mainweb/login.html")
+
 
 
 
@@ -101,8 +110,19 @@ def user_dashboard(request):
     
 
 def logout_view(request):
-    request.session.flush()  # Elimina todos los datos de sesión
+    # Elimina únicamente los datos relacionados con la sesión del usuario
+    if "auth_token" in request.session:
+        del request.session["auth_token"]  # Eliminar el token de autenticación
+    if "username" in request.session:
+        del request.session["username"]  # Eliminar el nombre de usuario
+
+    # Puedes limpiar otros datos específicos del usuario si los tienes
+    if "cart" in request.session:
+        del request.session["cart"]  # Vaciar el carrito si está presente
+
+    # Redirige al usuario a la página de inicio de sesión
     return redirect("mainweb:login")
+
 
 @login_required
 def profile_view(request):
@@ -129,15 +149,30 @@ def profile_view(request):
         return redirect("mainweb:login")
     # Vista para añadir productos al carrito
 def add_to_cart(request, product_id):
+    # Verificar si el usuario tiene un token en la sesión
+    token = request.session.get("auth_token")
+    if not token:
+        # Redirigir al login si el usuario no está autenticado
+        return redirect("mainweb:login")
+
+    # Si el usuario está autenticado, proceder con la lógica de agregar al carrito
     producto = get_object_or_404(Producto, id=product_id)
     cantidad = int(request.POST.get("cantidad", 1))
+
+    # Verificar si hay suficiente inventario
     if cantidad > producto.cantidad_en_inventario:
         return redirect("mainweb:product_detail", product_id=product_id)
 
+    # Obtener el carrito de la sesión o inicializarlo si no existe
     carrito = request.session.get("cart", {})
     carrito[str(product_id)] = carrito.get(str(product_id), 0) + cantidad
+
+    # Guardar el carrito actualizado en la sesión
     request.session["cart"] = carrito
+
+    # Redirigir al carrito después de agregar el producto
     return redirect("mainweb:cart")
+
 
 # Vista para mostrar el carrito
 def view_cart(request):
@@ -162,23 +197,26 @@ def view_cart(request):
 # Vista para procesar el checkout
 
 
-@login_required
 def checkout(request):
-    # Obtener el token de la sesión
+    # Verificar si el usuario tiene un token en la sesión
     token = request.session.get("auth_token")
     if not token:
-        # Si no hay token, redirige al login
+        # Redirigir al login si el usuario no está autenticado
         return redirect("mainweb:login")
 
-    headers = {"Authorization": f"Token {token}"}
+    # Obtener el carrito desde la sesión
     carrito = request.session.get("cart", {})
 
+    # Verificar si el carrito está vacío
     if not carrito:
-        # Si el carrito está vacío, redirige al dashboard con un mensaje
+        # Redirigir al dashboard si no hay productos en el carrito
         return redirect("mainweb:user_dashboard")
 
+    headers = {"Authorization": f"Token {token}"}
     order_data = {"items": []}
     total = 0
+
+    # Crear los datos del pedido basados en el carrito
     for product_id, cantidad in carrito.items():
         producto = Producto.objects.get(id=product_id)
         total += float(producto.precio) * cantidad  # Convertir Decimal a float
@@ -199,7 +237,10 @@ def checkout(request):
 
     # Vaciar el carrito después de la compra
     request.session["cart"] = {}
+
+    # Redirigir al dashboard del usuario después del checkout
     return redirect("mainweb:user_dashboard")
+
 
 
 def product_detail(request, product_id):

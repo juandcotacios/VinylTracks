@@ -1,3 +1,4 @@
+/* General */
 * {
     margin: 0;
     padding: 0;
@@ -9,58 +10,85 @@ body {
     background-color: #f9f9f9;
 }
 
+/* Encabezado */
 header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 20px;
-    background-color: #fff;
-    border-bottom: 1px solid #ddd;
+    background-color: #8B0000; /* Rojo vinotinto */
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+    position: relative;
 }
 
 .logo {
-    font-size: 24px;
+    font-size: 48px; /* Más grande */
     font-weight: bold;
-    color: #d80027;
+    color: white; /* Blanco */
+    margin: 0;
 }
 
-nav ul {
-    display: flex;
-    gap: 20px;
-    list-style: none;
-}
-
-nav ul li a {
-    text-decoration: none;
-    color: #333;
-    font-weight: bold;
-}
-
-.icons {
+/* Botones de autenticación */
+.auth-buttons {
+    position: absolute;
+    top: 20px;
+    right: 20px;
     display: flex;
     gap: 10px;
 }
 
-.filter-section {
+.auth-buttons a {
+    text-decoration: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    color: white;
+    background-color: #808080; /* Gris */
+    font-size: 14px;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.auth-buttons a:hover {
+    background-color: #505050; /* Gris más oscuro */
+}
+
+/* Navegación */
+nav {
+    background-color: white; /* Blanco */
+    border-top: 2px solid #8B0000; /* Línea superior */
+    border-bottom: 2px solid #8B0000; /* Línea inferior */
+    padding: 10px 0;
+}
+
+nav ul {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px;
-    background-color: #fff;
-    border-bottom: 1px solid #ddd;
+    justify-content: center;
+    list-style: none;
+    gap: 20px;
+    padding: 0;
+    margin: 0;
 }
 
-.filters select, .sort select {
-    padding: 5px;
-    font-size: 16px;
+nav ul li {
+    padding: 5px 15px;
+    border-left: 1px solid #8B0000; /* Separadores */
 }
 
+nav ul li:first-child {
+    border-left: none; /* Sin separador en el primer elemento */
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: #8B0000; /* Rojo vinotinto */
+    font-weight: bold;
+}
+
+/* Listado de productos */
 .product-list {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Diseño responsivo en cuadrícula */
-    gap: 20px; /* Espacio entre los elementos */
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
     padding: 20px;
-    justify-content: center; /* Alinea los productos al centro */
+    justify-content: center;
 }
 
 .product-card {
@@ -73,11 +101,12 @@ nav ul li a {
     padding: 15px;
     background: #fff;
     position: relative;
-    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* Agrega una ligera sombra para destacar las tarjetas */
-    transition: transform 0.2s ease-in-out; /* Animación suave */
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease-in-out;
 }
+
 .product-card:hover {
-    transform: translateY(-5px); /* Eleva la tarjeta al pasar el ratón */
+    transform: translateY(-5px);
 }
 
 .labels {
@@ -121,10 +150,12 @@ nav ul li a {
     margin: 10px 0;
 }
 
-.add-to-cart {
+.view-product {
+    display: inline-block;
     background-color: #d80027;
     color: #fff;
-    border: none;
+    text-align: center;
+    text-decoration: none;
     padding: 10px;
     width: 100%;
     border-radius: 5px;
@@ -132,9 +163,11 @@ nav ul li a {
     font-size: 14px;
 }
 
-.add-to-cart:hover {
+.view-product:hover {
     background-color: #b0001f;
 }
+
+/* Estilización de la página del dashboard del usuario */
 .user-dashboard {
     padding: 20px;
 }
@@ -165,19 +198,4 @@ nav ul li a {
 
 .user-dashboard a:hover {
     text-decoration: underline;
-}
-.view-product {
-    display: inline-block;
-    background-color: #d80027;
-    color: #fff;
-    text-align: center;
-    text-decoration: none;
-    padding: 10px;
-    width: 100%;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 14px;
-}
-.view-product:hover {
-    background-color: #b0001f;
 }

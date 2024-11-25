@@ -6,67 +6,167 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Discover Music</title>
+    <title>VinylTracks</title>
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    <style>
+        /* Estilos personalizados */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #8B0000; /* Rojo vinotinto */
+            color: white;
+            padding: 20px 0;
+            position: relative;
+            text-align: center;
+        }
+
+        .logo {
+            font-size: 48px;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .auth-buttons {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+
+        .auth-buttons a {
+            text-decoration: none;
+            margin-left: 10px;
+            padding: 8px 15px;
+            border-radius: 5px;
+            color: white;
+            background-color: #808080; /* Gris */
+            font-size: 14px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        .auth-buttons a:hover {
+            background-color: #505050; /* Gris más oscuro */
+        }
+
+        nav {
+            background-color: white;
+            padding: 10px 0;
+            border-top: 2px solid #8B0000; /* Línea superior */
+            border-bottom: 2px solid #8B0000; /* Línea inferior */
+        }
+
+        nav ul {
+            list-style-type: none;
+            display: flex;
+            justify-content: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        nav ul li {
+            margin: 0 15px;
+            padding: 5px 15px;
+            border-left: 1px solid #8B0000; /* Separadores */
+        }
+
+        nav ul li:first-child {
+            border-left: none; /* Sin separador en el primer elemento */
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: #8B0000; /* Rojo vinotinto */
+            font-weight: bold;
+        }
+
+        .product-list {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 20px auto;
+            max-width: 1200px;
+        }
+
+        .product-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            margin: 15px;
+            width: 250px;
+            text-align: center;
+        }
+
+        .product-card img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .product-card h3,
+        .product-card p {
+            margin: 10px 0;
+        }
+
+        .view-product {
+            display: inline-block;
+            margin: 10px 0;
+            padding: 10px 15px;
+            background-color: #8B0000; /* Rojo vinotinto */
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        .view-product:hover {
+            background-color: #600000; /* Rojo más oscuro */
+        }
+    </style>
 </head>
 
 <body>
     <header>
-        <div class="logo">discovermusic.co</div>
-        <nav>
-            <ul>
-                <li><a href="#">Promoción</a></li>
-                <li><a href="#">Home</a></li>
-                <li><a href="#">Artistas</a></li>
-                <li><a href="#">Formatos</a></li>
-                <li><a href="#">Novedades</a></li>
-            </ul>
-        </nav>
-        <div class="icons">
-            <span onclick="loginFunc()" class="icon-search">🔍</span>
-            
-            <a href="{% url 'mainweb:login' %}" class="icon-user">👤</a>
-
-            <span class="icon-cart">🛒</span>
+        <h1 class="logo">VinylTracks</h1>
+        <div class="auth-buttons">
+            {% if is_authenticated %}
+                <a href="{% url 'mainweb:cart' %}">Mi Carrito</a>
+                <a href="{% url 'mainweb:logout' %}">Cerrar Sesión</a>
+            {% else %}
+                <a href="{% url 'mainweb:login' %}">Iniciar Sesión</a>
+                <a href="{% url 'mainweb:register' %}">Registrarse</a>
+            {% endif %}
         </div>
     </header>
+    <nav>
+        <ul>
+            <li><a href="{% url 'mainweb:index' %}">Inicio</a></li>
+            <li><a href="#">Información</a></li>
+            <li><a href="#">Contacto</a></li>
+        </ul>
+    </nav>
     <main>
-        <div class="filter-section">
-            <div class="filters">
-                <select>
-                    <option>Disponibilidad</option>
-                </select>
-                <select>
-                    <option>Precio</option>
-                </select>
-            </div>
-            <div class="sort">
-                <label>Ordenar por:</label>
-                <select>
-                    <option>Fecha: reciente a antiguo(a)</option>
-                </select>
-            </div>
-        </div>
         <div class="product-list">
             {% for producto in productos %}
-            <div class="product-card">
-                <div class="labels">
-                    <span class="preventa">PREVENTA</span>
-                    <span class="exclusivo">EXCLUSIVO</span>
+                <div class="product-card">
+                    <div class="labels">
+                        <span class="preventa">PREVENTA</span>
+                        <span class="exclusivo">EXCLUSIVO</span>
+                    </div>
+                    <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}">
+                    <h3>{{ producto.nombre }}</h3>
+                    <p>{{ producto.artista }}</p>
+                    <p class="price">${{ producto.precio }}</p>
+                    <a href="{% url 'mainweb:product_detail' producto.id %}" class="view-product">Ver Producto</a>
                 </div>
-                <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}">
-                <h3>{{ producto.nombre }}</h3>
-                <p>{{ producto.artista }}</p>
-                <p class="price">${{ producto.precio }}</p>
-                <a href="{% url 'mainweb:product_detail' producto.id %}" class="view-product">Ver Producto</a>
-                
-            </div>
             {% empty %}
-            <p>No hay productos disponibles en este momento.</p>
+                <p>No hay productos disponibles en este momento.</p>
             {% endfor %}
         </div>
     </main>
-    <script src="{% static 'js/main.js' %}"></script>
 </body>
 
 </html>

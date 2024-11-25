@@ -113,4 +113,28 @@ class CartValidationView(APIView):
             return Response({"errors": errors}, status=400)
         return Response({"message": "Carrito válido"}, status=200)
 
+class ViewsWeb(APIView):
+    permission_classes = [AllowAny]  # Permitir acceso a usuarios autenticados o no autenticados
 
+    def get(self, request):
+        # Recuperar el token de la sesión (si existe)
+        auth_token = request.session.get("auth_token", None)
+
+        # Determinar si el usuario está autenticado
+        is_authenticated = bool(auth_token)
+
+        # Obtener los productos de la base de datos
+        productos = Producto.objects.all()
+
+        # Construir el contexto para la respuesta
+        context = {
+            "is_authenticated": is_authenticated,
+            "productos": productos,
+        }
+
+        if is_authenticated:
+            # Si el usuario está autenticado, obtener información adicional
+            username = request.session.get("username", "Invitado")
+            context["username"] = username
+
+        return render(request, "mainweb/indexWebUser.html", context)
