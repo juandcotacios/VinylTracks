@@ -162,6 +162,11 @@
 <body>
     <header>
         <h1 class="logo">VinylTracks</h1>
+        <div class="auth-buttons">
+            {% if is_authenticated %}
+                <a href="{% url 'mainweb:logout' %}" class="button">Cerrar Sesión</a>
+            {% endif %}
+        </div>
     </header>
     <nav>
         <ul>

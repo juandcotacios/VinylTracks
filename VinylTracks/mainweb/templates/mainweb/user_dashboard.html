@@ -7,13 +7,136 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel de Usuario</title>
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    <style>
+        body {
+            background-color: #f9f9f9;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #8B0000; /* Rojo vinotinto */
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            position: relative;
+        }
+
+        .logo {
+            font-size: 36px;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        nav ul {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            padding: 0;
+            margin: 10px 0 0;
+        }
+
+        nav ul li {
+            margin: 0 15px;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+            padding: 8px 15px;
+            border-radius: 5px;
+            background-color: #505050;
+            transition: background-color 0.3s;
+        }
+
+        nav ul li a:hover {
+            background-color: #333;
+        }
+
+        main {
+            max-width: 1000px;
+            margin: 30px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            font-size: 28px;
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        section {
+            margin-bottom: 30px;
+        }
+
+        section h3 {
+            font-size: 20px;
+            color: #8B0000;
+            margin-bottom: 15px;
+        }
+
+        .user-dashboard ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .user-dashboard ul li {
+            padding: 15px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .user-dashboard ul li:last-child {
+            border-bottom: none;
+        }
+
+        .user-dashboard ul li strong {
+            font-size: 16px;
+            color: #333;
+        }
+
+        .user-dashboard ul li ul {
+            margin-top: 10px;
+            padding-left: 20px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .options ul li {
+            margin: 10px 0;
+        }
+
+        .options ul li a {
+            text-decoration: none;
+            font-size: 16px;
+            color: #8B0000;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+
+        .options ul li a:hover {
+            color: #600000;
+        }
+
+        .empty-orders {
+            text-align: center;
+            font-size: 18px;
+            color: #666;
+            margin: 20px 0;
+        }
+    </style>
 </head>
 <body>
     <header>
-        <div class="logo">VinylTracks</div>
+        <h1 class="logo">VinylTracks</h1>
         <nav>
             <ul>
-                <a href="{% url 'mainweb:index' %}">Volver a la Tienda</a>
+                <li><a href="{% url 'mainweb:index' %}">Volver a la Tienda</a></li>
                 <li><a href="{% url 'mainweb:logout' %}">Cerrar Sesión</a></li>
             </ul>
         </nav>
@@ -42,12 +165,12 @@
                         {% endfor %}
                     </ul>
                 {% else %}
-                    <p>Aún no has realizado ningún pedido.</p>
+                    <p class="empty-orders">Aún no has realizado ningún pedido.</p>
                 {% endif %}
             </section>
 
             <!-- Opciones del Usuario -->
-            <section>
+            <section class="options">
                 <h3>Opciones</h3>
                 <ul>
                     <li><a href="{% url 'mainweb:user_dashboard' %}">Historial de Pedidos</a></li>
