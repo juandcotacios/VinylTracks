@@ -134,19 +134,20 @@ def user_dashboard(request):
     
 
 def logout_view(request):
-    
     # Elimina únicamente los datos relacionados con la sesión del usuario
     if "auth_token" in request.session:
         del request.session["auth_token"]  # Eliminar el token de autenticación
     if "username" in request.session:
         del request.session["username"]  # Eliminar el nombre de usuario
-
-    # Puedes limpiar otros datos específicos del usuario si los tienes
     if "cart" in request.session:
         del request.session["cart"]  # Vaciar el carrito si está presente
+
+    # Limpiar toda la sesión (opcional)
     request.session.flush()
-    # Redirige al usuario a la página de inicio de sesión
-    return redirect("mainweb:login")
+
+    # Redirigir al usuario a la página principal no autenticada
+    return redirect("mainweb:index")
+
 
 
 @login_required
